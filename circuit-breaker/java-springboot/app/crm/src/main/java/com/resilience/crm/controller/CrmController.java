@@ -1,5 +1,6 @@
 package com.resilience.crm.controller;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ public class CrmController {
     private RestTemplate restTemplate;
 
     @GetMapping
+    @CircuitBreaker(name = "crm", fallbackMethod = "crmFallback")
     public List<Map<String, Object>> crm(){
         restTemplate = new RestTemplate();
         // Faz a requisição ao serviço cliente para obter a lista de clientes
@@ -29,5 +31,9 @@ public class CrmController {
         }
 
         return clients;
+    }
+
+    public String crmFallback(Exception e){
+        return "Fallback para o serviço CRM";
     }
 }

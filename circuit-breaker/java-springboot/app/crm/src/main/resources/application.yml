@@ -4,38 +4,40 @@ server:
 management:
   health:
     circuitbreakers:
-      enabled: true
+      enabled: true  # Habilita a exposição de informações do circuit breaker no endpoint de health
   endpoints:
     web:
       exposure:
-        include: health
+        include: health  # Inclui o endpoint de health para exposição via web
   endpoint:
     health:
-      show-details: always
+      show-details: always  # Mostra detalhes completos no endpoint de health
 
 resilience4j:
   circuitbreaker:
     instances:
-      serviceA:
-        registerHealthIndicator: true
-        eventConsumerBufferSize: 10
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 5s
-        permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10
-        slidingWindowType: COUNT_BASED
+      crm:
+        registerHealthIndicator: true  # Registra um indicador de saúde para o circuit breaker no endpoint de health
+        eventConsumerBufferSize: 10  # Tamanho do buffer do consumidor de eventos
+        failureRateThreshold: 50  # Limiar de taxa de falha para abrir o circuit breaker (em porcentagem)
+        minimumNumberOfCalls: 5  # Número mínimo de chamadas antes de considerar a taxa de falha
+        automaticTransitionFromOpenToHalfOpenEnabled: true  # Transição automática de aberto para semiaberto ativada
+        waitDurationInOpenState: 5s  # Duração de espera no estado aberto antes de tentar meios de comunicação
+        permittedNumberOfCallsInHalfOpenState: 3  # Número permitido de chamadas no estado semiaberto
+        slidingWindowSize: 10  # Tamanho da janela deslizante para cálculos (número de chamadas)
+        slidingWindowType: COUNT_BASED  # Tipo de janela deslizante (COUNT_BASED ou TIME_BASED)
+
   retry:
     instances:
-      serviceA:
-        registerHealthIndicator: true
-        maxRetryAttempts: 5
-        waitDuration: 10s
+      crm:
+        registerHealthIndicator: true  # Registra um indicador de saúde para o mecanismo de retry no endpoint de health
+        maxRetryAttempts: 5  # Número máximo de tentativas de retry
+        waitDuration: 10s  # Duração de espera entre tentativas de retry
+
   ratelimiter:
     instances:
-      serviceA:
-        registerHealthIndicator: false
-        limitForPeriod: 10
-        limitRefreshPeriod: 10s
-        timeoutDuration: 3s
+      crm:
+        registerHealthIndicator: false  # Não registra um indicador de saúde para o rate limiter no endpoint de health
+        limitForPeriod: 10  # Limite de chamadas permitidas no período
+        limitRefreshPeriod: 10s  # Período de tempo para reiniciar o contador de chamadas permitidas
+        timeoutDuration: 3s  # Duração de espera por uma resposta quando o limite é atingido
