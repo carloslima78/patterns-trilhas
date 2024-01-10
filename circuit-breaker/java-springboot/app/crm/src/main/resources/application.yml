@@ -4,11 +4,11 @@ server:
 management:
   health:
     circuitbreakers:
-      enabled: true  # Habilita a exposição de informações do circuit breaker no endpoint de health
+      enabled: true  # Habilita a exposiï¿½ï¿½o de informaï¿½ï¿½es do circuit breaker no endpoint de health
   endpoints:
     web:
       exposure:
-        include: health  # Inclui o endpoint de health para exposição via web
+        include: health  # Inclui o endpoint de health para exposiï¿½ï¿½o via web
   endpoint:
     health:
       show-details: always  # Mostra detalhes completos no endpoint de health
@@ -17,27 +17,27 @@ resilience4j:
   circuitbreaker:
     instances:
       crm:
-        registerHealthIndicator: true  # Registra um indicador de saúde para o circuit breaker no endpoint de health
+        registerHealthIndicator: true  # Registra um indicador de saï¿½de para o circuit breaker no endpoint de health
         eventConsumerBufferSize: 10  # Tamanho do buffer do consumidor de eventos
         failureRateThreshold: 50  # Limiar de taxa de falha para abrir o circuit breaker (em porcentagem)
-        minimumNumberOfCalls: 5  # Número mínimo de chamadas antes de considerar a taxa de falha
-        automaticTransitionFromOpenToHalfOpenEnabled: true  # Transição automática de aberto para semiaberto ativada
-        waitDurationInOpenState: 5s  # Duração de espera no estado aberto antes de tentar meios de comunicação
-        permittedNumberOfCallsInHalfOpenState: 3  # Número permitido de chamadas no estado semiaberto
-        slidingWindowSize: 10  # Tamanho da janela deslizante para cálculos (número de chamadas)
+        minimumNumberOfCalls: 5  # Nï¿½mero mï¿½nimo de chamadas antes de considerar a taxa de falha
+        automaticTransitionFromOpenToHalfOpenEnabled: true  # Transiï¿½ï¿½o automï¿½tica de aberto para semiaberto ativada
+        waitDurationInOpenState: 5s  # Duraï¿½ï¿½o de espera no estado aberto antes de tentar meios de comunicaï¿½ï¿½o
+        permittedNumberOfCallsInHalfOpenState: 3  # Nï¿½mero permitido de chamadas no estado semiaberto
+        slidingWindowSize: 10  # Tamanho da janela deslizante para cï¿½lculos (nï¿½mero de chamadas)
         slidingWindowType: COUNT_BASED  # Tipo de janela deslizante (COUNT_BASED ou TIME_BASED)
 
   retry:
     instances:
       crm:
-        registerHealthIndicator: true  # Registra um indicador de saúde para o mecanismo de retry no endpoint de health
-        maxRetryAttempts: 5  # Número máximo de tentativas de retry
-        waitDuration: 10s  # Duração de espera entre tentativas de retry
+        registerHealthIndicator: true  # Registra um indicador de saï¿½de para o mecanismo de retry no endpoint de health
+        maxRetryAttempts: 5  # Nï¿½mero mï¿½ximo de tentativas de retry
+        waitDuration: 10s  # Duraï¿½ï¿½o de espera entre tentativas de retry
 
   ratelimiter:
     instances:
       crm:
-        registerHealthIndicator: false  # Não registra um indicador de saúde para o rate limiter no endpoint de health
-        limitForPeriod: 10  # Limite de chamadas permitidas no período
-        limitRefreshPeriod: 10s  # Período de tempo para reiniciar o contador de chamadas permitidas
-        timeoutDuration: 3s  # Duração de espera por uma resposta quando o limite é atingido
+        registerHealthIndicator: false  # Nï¿½o registra um indicador de saï¿½de para o rate limiter no endpoint de health
+        limitForPeriod: 2  # Limite de chamadas permitidas no perï¿½odo
+        limitRefreshPeriod: 10s  # Perï¿½odo de tempo para reiniciar o contador de chamadas permitidas
+        timeoutDuration: 3s  # Duraï¿½ï¿½o de espera por uma resposta quando o limite ï¿½ atingido
