@@ -28,7 +28,7 @@ public class CrmController {
 
         // Adiciona uma mensagem específica do serviço CRM a cada cliente e concatena as mensagens
         String crmMessage = clients.stream()
-                .map(client -> "Proposta enviado ao cliente " + client.get("nome") + " no email " + client.get("email"))
+                .map(client -> "Proposta enviada ao cliente " + client.get("nome") + " no email " + client.get("email"))
                 .collect(Collectors.joining("\n"));
 
         return crmMessage;

@@ -21,12 +21,10 @@ public class ClientController {
         Map<String, String> client1 = new HashMap<>();
         client1.put("nome", "João");
         client1.put("email", "joao@email.com");
-        client1.put("telefone", "123456789");
 
         Map<String, String> client2 = new HashMap<>();
         client2.put("nome", "Maria");
         client2.put("email", "maria@email.com");
-        client2.put("telefone", "987654321");
 
         clients.add(client1);
         clients.add(client2);
