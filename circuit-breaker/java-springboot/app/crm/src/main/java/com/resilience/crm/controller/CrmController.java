@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/crm")
 public class CrmController {
@@ -12,8 +15,19 @@ public class CrmController {
     private RestTemplate restTemplate;
 
     @GetMapping
-    public String crm(){
+    public List<Map<String, Object>> crm(){
         restTemplate = new RestTemplate();
-        return restTemplate.getForObject("http://localhost:8081/client", String.class);
+        // Faz a requisição ao serviço cliente para obter a lista de clientes
+        List<Map<String, Object>> clients = restTemplate.getForObject("http://localhost:8081/client", List.class);
+
+        // Adiciona uma mensagem específica do serviço CRM
+        String crmMessage = "Oferta especial de 10% de desconto em todos os produtos!";
+
+        // Adiciona a mensagem à lista de clientes
+        for (Map<String, Object> client : clients) {
+            client.put("Mensagem", crmMessage);
+        }
+
+        return clients;
     }
 }
