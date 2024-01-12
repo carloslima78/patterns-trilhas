@@ -224,21 +224,39 @@ Ao executar o Serviço CRM na porta 8080, realizando uma requisição com sucess
 
 ## Agora Valendo: Testando o Circuit Breaker 
 
-O Serviço de Clientes será derrubado e ao executá-lo, resultado esperado é que ele não responda na porta 8081.
+O Serviço de Clientes será derrubado e ao executá-lo, o resultado esperado é que ele não responda na porta 8081.
 
 ![imagem](../imagens/clientservicefailure.png)
 
 
-Com o Serviço de Clientes fora do ar, se o Serviço CRM enviar a quantidade mínina de requisições definida para consultar os clientes, o método de Fallback será acionado e retornará a mensagem de erro. 
+Com o Serviço de Clientes fora do ar, caso o Serviço CRM tente enviar requisições definida para consultar os clientes, o método de Fallback será acionado e retornará a mensagem de erro. 
 
 ![imagem](../imagens/crmservicefallback.png)
 
 
-Ao consultar a URL do Actuator configurado para monitorar a saúde do Serviço CRM, nota-se que o estado do Circuit Breaker mudou para OPEN.
+Ao consultar a URL do Actuator configurado para monitorar a saúde do Serviço CRM, nota-se que o estado do Circuit Breaker mudou para OPEN. Isso significa que o Serviço de Clientes ao qual depende, está fora do ar.
 
 ![imagem](../imagens/actuatoropen.png)
 
 Neste momento e nessa situação, o Circuit Breaker não permite requisições ao Serviço de Clientes, e começa a enviar notificações periódicas para verificar se se obtém resposta, e enquanto isso, o estado passa a ser HALF_OPEN.
+
+![imagem](../imagens/actuatorhalfopen.png)
+
+Ao executar novamente o Serviço de Clientes, o mesmo para a responder na porta 8081.
+
+![imagem](../imagens/clientservice.png)
+
+Conseguentemente, caso o Serviço CRM faça novas requisições, obterá a resposta e passará a gerar as notificações aos clientes João e Maria, uma vez que obteve os dados.
+
+![imagem](../imagens/crmservice.png)
+
+Ao consultar novamente a URL do Actuator, o estado do Circuit Breaker assumirá por um tempo o estado de HALF_OPEN. 
+
+![imagem](../imagens/actuatorhalfopen.png)
+
+... e logo em seguida volta ao estado CLOSED, indicando que a comunicação com o Serviço de Clientes está no ar.
+
+![imagem](../imagens/actuatorclosed.png)
 
 ## Conclusão
 
