@@ -4,40 +4,27 @@ server:
 management:
   health:
     circuitbreakers:
-      enabled: true  # Habilita a exposi��o de informa��es do circuit breaker no endpoint de health
+      enabled: true
   endpoints:
     web:
       exposure:
-        include: health  # Inclui o endpoint de health para exposi��o via web
+        include: health
   endpoint:
     health:
-      show-details: always  # Mostra detalhes completos no endpoint de health
+      show-details: always
 
 resilience4j:
   circuitbreaker:
     instances:
       crm:
-        registerHealthIndicator: true  # Registra um indicador de sa�de para o circuit breaker no endpoint de health
-        eventConsumerBufferSize: 10  # Tamanho do buffer do consumidor de eventos
-        failureRateThreshold: 50  # Limiar de taxa de falha para abrir o circuit breaker (em porcentagem)
-        minimumNumberOfCalls: 5  # N�mero m�nimo de chamadas antes de considerar a taxa de falha
-        automaticTransitionFromOpenToHalfOpenEnabled: true  # Transi��o autom�tica de aberto para semiaberto ativada
-        waitDurationInOpenState: 5s  # Dura��o de espera no estado aberto antes de tentar meios de comunica��o
-        permittedNumberOfCallsInHalfOpenState: 3  # N�mero permitido de chamadas no estado semiaberto
-        slidingWindowSize: 10  # Tamanho da janela deslizante para c�lculos (n�mero de chamadas)
-        slidingWindowType: COUNT_BASED  # Tipo de janela deslizante (COUNT_BASED ou TIME_BASED)
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
 
-  retry:
-    instances:
-      crm:
-        registerHealthIndicator: true  # Registra um indicador de sa�de para o mecanismo de retry no endpoint de health
-        maxRetryAttempts: 5  # N�mero m�ximo de tentativas de retry
-        waitDuration: 10s  # Dura��o de espera entre tentativas de retry
 
-  ratelimiter:
-    instances:
-      crm:
-        registerHealthIndicator: false  # N�o registra um indicador de sa�de para o rate limiter no endpoint de health
-        limitForPeriod: 2  # Limite de chamadas permitidas no per�odo
-        limitRefreshPeriod: 10s  # Per�odo de tempo para reiniciar o contador de chamadas permitidas
-        timeoutDuration: 3s  # Dura��o de espera por uma resposta quando o limite � atingido
