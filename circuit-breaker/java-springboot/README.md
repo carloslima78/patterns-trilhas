@@ -233,7 +233,7 @@ resilience4j:
         slidingWindowType: COUNT_BASED
 ```
 
-Ao executar o Serviço CRM na porta 8080, realizando uma requisição com sucesso so Serviço de Clientes, o resultado esperado é a montagem de uma notificação personalizada aos clientes João e Maria, utilizando os dados recuperados.
+Ao executar o Serviço CRM na porta 8080, realizando uma requisição com sucesso ao Serviço de Clientes, o resultado esperado é a montagem de uma notificação personalizada aos clientes João e Maria, utilizando os dados recuperados.
 
 ![imagem](../imagens/crmservice.png)
 
@@ -262,7 +262,7 @@ Neste momento e nessa situação, o Circuit Breaker não permite requisições a
 
 ![imagem](../imagens/actuatorhalfopen.png)
 
-Ao executar novamente o Serviço de Clientes, o mesmo para a responder na porta 8081.
+Ao executar novamente o Serviço de Clientes, o mesmo passa a responder na porta 8081 retornando os dados dos clientes João e Maria.
 
 ![imagem](../imagens/clientservice.png)
 
@@ -274,7 +274,7 @@ Ao consultar novamente a URL do Actuator, o estado do Circuit Breaker assumirá 
 
 ![imagem](../imagens/actuatorhalfopen.png)
 
-... e logo em seguida volta ao estado CLOSED, indicando que a comunicação com o Serviço de Clientes está no ar.
+... e logo em seguida volta ao estado CLOSED, indicando que a comunicação com o Serviço de Clientes foi reestabelecida.
 
 ![imagem](../imagens/actuatorclosed.png)
 
