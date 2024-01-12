@@ -221,6 +221,10 @@ Ao executar o Serviço CRM na porta 8080, realizando uma requisição com sucess
 
 ![imagem](../imagens/crmservice.png)
 
+Ao consultar a URL do Actuator configurado para monitorar a saúde do Serviço CRM, nota-se que o estado do Circuit Breaker está CLOSED. Isso significa que a comunicação do Serviço CRM com o Serviço de Clientes está no ar.
+
+![imagem](../imagens/actuatorclosed.png)
+
 
 ## Agora Valendo: Testando o Circuit Breaker 
 
@@ -229,12 +233,12 @@ O Serviço de Clientes será derrubado e ao executá-lo, o resultado esperado é
 ![imagem](../imagens/clientservicefailure.png)
 
 
-Com o Serviço de Clientes fora do ar, caso o Serviço CRM tente enviar requisições definida para consultar os clientes, o método de Fallback será acionado e retornará a mensagem de erro. 
+Com o Serviço de Clientes fora do ar, caso o Serviço CRM tente enviar requisições para consultar os clientes, o método de Fallback será acionado e retornará a mensagem de erro. 
 
 ![imagem](../imagens/crmservicefallback.png)
 
 
-Ao consultar a URL do Actuator configurado para monitorar a saúde do Serviço CRM, nota-se que o estado do Circuit Breaker mudou para OPEN. Isso significa que o Serviço de Clientes ao qual depende, está fora do ar.
+Ao consultar a novamente a URL do Actuator, nota-se que o estado do Circuit Breaker mudou para OPEN. Isso significa que o Serviço de Clientes ao qual depende, está fora do ar.
 
 ![imagem](../imagens/actuatoropen.png)
 
