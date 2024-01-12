@@ -62,6 +62,7 @@ Além disso, ao integrar o Spring Boot Actuator, pode-se aproveitar os seus recu
 
 O Resilience4j, combinado com o Spring Boot Actuator, oferece uma solução abrangente para aprimorar a confiabilidade e a estabilidade do seu sistema Java.
 
+
 ## Serviço de Clientes
 
 A classe ClientController age como uma espécie de "catálogo de clientes" para o nosso Serviço CRM. Quando o Serviço CRM precisa enviar notificações personalizadas para clientes específicos, ele faz uma visita a este "catálogo". Aqui, ele encontra as informações sobre clientes, como nomes e emails.
@@ -118,7 +119,7 @@ server:
 
 Ao executar o Serviço de Clientes, o resultado esperado é a listagem dos dados nome e email dos clientes João e Maria.
 
-![imagem](imagens/clientservice.png)
+![imagem](../imagens/clientservice.png)
 
 
 ## Serviço CRM
@@ -218,7 +219,7 @@ resilience4j:
 
 Ao executar o Serviço CRM realizando uma requisição com sucesso so Serviço de Clientes, o resultado esperado é a montagem de uma notificação personalizada aos clientes João e Maria, utilizando os dados recuperados.
 
-![imagem](imagens/crmservice.png)
+![imagem](../imagens/crmservice.png)
 
 ## Conclusão
 
