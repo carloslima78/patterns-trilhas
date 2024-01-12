@@ -117,7 +117,7 @@ server:
   port: 8080
 ```
 
-Ao executar o Serviço de Clientes, o resultado esperado é a listagem dos dados nome e email dos clientes João e Maria.
+Ao executar o Serviço de Clientes na porta 8081, o resultado esperado é a listagem dos dados nome e email dos clientes João e Maria.
 
 ![imagem](../imagens/clientservice.png)
 
@@ -217,9 +217,28 @@ resilience4j:
         slidingWindowType: COUNT_BASED
 ```
 
-Ao executar o Serviço CRM realizando uma requisição com sucesso so Serviço de Clientes, o resultado esperado é a montagem de uma notificação personalizada aos clientes João e Maria, utilizando os dados recuperados.
+Ao executar o Serviço CRM na porta 8080, realizando uma requisição com sucesso so Serviço de Clientes, o resultado esperado é a montagem de uma notificação personalizada aos clientes João e Maria, utilizando os dados recuperados.
 
 ![imagem](../imagens/crmservice.png)
+
+
+## Agora Valendo: Testando o Circuit Breaker 
+
+O Serviço de Clientes será derrubado e ao executá-lo, resultado esperado é que ele não responda na porta 8081.
+
+![imagem](../imagens/clientservicefailure.png)
+
+
+Com o Serviço de Clientes fora do ar, se o Serviço CRM enviar a quantidade mínina de requisições definida para consultar os clientes, o método de Fallback será acionado e retornará a mensagem de erro. 
+
+![imagem](../imagens/crmservicefallback.png)
+
+
+Ao consultar a URL do Actuator configurado para monitorar a saúde do Serviço CRM, nota-se que o estado do Circuit Breaker mudou para OPEN.
+
+![imagem](../imagens/actuatoropen.png)
+
+Neste momento e nessa situação, o Circuit Breaker não permite requisições ao Serviço de Clientes, e começa a enviar notificações periódicas para verificar se se obtém resposta, e enquanto isso, o estado passa a ser HALF_OPEN.
 
 ## Conclusão
 
