@@ -11,6 +11,7 @@ O Padrão Circuit Breaker é uma técnica de gerenciamento de falhas projetada p
 
 Inspirado pelo conceito de disjuntores elétricos, que interrompem a corrente elétrica quando há uma sobrecarga, o Circuit Breaker atua como uma barreira entre os componentes de um sistema, impedindo a propagação de falhas e permitindo a recuperação adequada.
 
+
 ## Estados do Circuit Breaker
 
 **Estado Fechado (Closed)**: Neste estado, o Circuit Breaker permite a passagem de chamadas e monitora a ocorrência de falhas. Se o número de falhas ultrapassar um limite previamente definido, o Circuit Breaker muda para o estado aberto.
@@ -18,6 +19,9 @@ Inspirado pelo conceito de disjuntores elétricos, que interrompem a corrente el
 **Estado Aberto (Open)**: Quando o Circuit Breaker está aberto, ele impede que as chamadas sejam encaminhadas, fornecendo uma resposta rápida para evitar sobrecarregar um sistema já prejudicado. Durante esse tempo, o Circuit Breaker pode direcionar as chamadas para uma função alternativa, como uma resposta padrão ou cache.
 
 **Estado Meio-Aberto (Half-Open)**: Após um período definido, o Circuit Breaker muda para o estado meio-aberto, permitindo que algumas chamadas passem. Se essas chamadas forem bem-sucedidas, o Circuit Breaker volta ao estado fechado, caso contrário, permanece no estado aberto, indicando que o sistema ainda não se recuperou totalmente.
+
+![imagem](imagens/diagramas-circuit breaker.png)
+
 
 ## Benefícios do Padrão Circuit Breaker
 
@@ -57,6 +61,164 @@ Com apenas algumas linhas de código, é possível proteger as aplicações cont
 Além disso, ao integrar o Spring Boot Actuator, pode-se aproveitar os seus recursos de monitoramento e gerenciamento fornecidos pelo Actuator. Isso inclui endpoints específicos para verificar o estado dos Circuit Breakers, possibilitando uma visão detalhada do comportamento e do desempenho da resiliência em tempo real. 
 
 O Resilience4j, combinado com o Spring Boot Actuator, oferece uma solução abrangente para aprimorar a confiabilidade e a estabilidade do seu sistema Java.
+
+## Serviço de Clientes
+
+A classe ClientController age como uma espécie de "catálogo de clientes" para o nosso Serviço CRM. Quando o Serviço CRM precisa enviar notificações personalizadas para clientes específicos, ele faz uma visita a este "catálogo". Aqui, ele encontra as informações sobre clientes, como nomes e emails.
+
+A ClientController, ao receber as requisições, entrega uma lista com dois clientes de exemplo, João e Maria, cada um com seu nome e email. Estes dados são exatamente o que o Serviço CRM precisa para criar mensagens personalizadas e encaminhá-las aos clientes certos.
+
+```hcl
+@RestController
+@RequestMapping("/client")
+public class ClientController {
+
+    @GetMapping
+    public List<Map<String, String>> client(){
+
+        List<Map<String, String>> clients = new ArrayList<>();
+
+        Map<String, String> client1 = new HashMap<>();
+        client1.put("nome", "João");
+        client1.put("email", "joao@email.com");
+
+        Map<String, String> client2 = new HashMap<>();
+        client2.put("nome", "Maria");
+        client2.put("email", "maria@email.com");
+
+        clients.add(client1);
+        clients.add(client2);
+
+        return clients;
+    }
+}
+```
+
+### Dependências (Arquivo pom.xml)
+
+- **spring-boot-starter-web**: Adiciona as dependências essenciais para criar aplicativos Spring Boot baseados na web.
+
+```hcl
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+	</dependencies>
+```
+
+### Configurações de Porta de Execução (Arquivo application.yml):
+
+A definição da porta 8081 indica o número da porta do servidor. 
+
+```hcl
+server:
+  port: 8080
+```
+
+Ao executar o Serviço de Clientes, o resultado esperado é a listagem dos dados nome e email dos clientes João e Maria.
+
+![imagem](imagens/clientservice.png)
+
+
+## Serviço CRM
+
+O "Serviço CRM" atua como o criador de propostas, utilizando o "Catálogo de Clientes" (Serviço de Clientes) para personalizar mensagens. 
+
+A notação **@CircuitBreaker** garante que, se o Serviço de Clientes estiver indisponível, o Circuit Breaker entra em ação, evitando impactos e acionando automaticamente o método Fallback. O método **ciruitBreakerFallback** fornece uma mensagem padrão, assegurando que o Serviço CRM continue operacional, mesmo em momentos de instabilidade do Serviço de Clientes.
+
+```hcl
+@RestController
+@RequestMapping("/crm")
+public class CrmController {
+
+    @GetMapping
+    @CircuitBreaker(name = "crm", fallbackMethod = "ciruitBreakerFallback")
+    public String crm(){
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        List<Map<String, Object>> clients = restTemplate.getForObject("http://localhost:8081/client", List.class);
+
+        String crmMessage = clients.stream()
+                .map(client -> "Proposta enviada ao cliente " + client.get("nome") + " no email " + client.get("email"))
+                .collect(Collectors.joining("\n"));
+
+        return crmMessage;
+    }
+
+    public String ciruitBreakerFallback(Exception e){
+
+        return "Fallback: Serviço de Clientes está fora do ar";
+    }
+}
+```
+
+### Dependências (Arquivo pom.xml)
+
+- **spring-boot-starter-web**: Adiciona as dependências essenciais para criar aplicativos Spring Boot baseados na web.
+- **spring-cloud-starter-circuitbreaker-resilience4j**: Integra o Resilience4j ao Spring Cloud Circuit Breaker, proporcionando resiliência a falhas no estilo Circuit Breaker.
+- **spring-boot-starter-actuator**: Inclui o Starter Actuator, que fornece recursos de monitoramento e gerenciamento para aplicativos Spring Boot.
+
+```hcl
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+	</dependencies>
+```
+
+### Configurações de Saúde e Circuit Breaker (Arquivo application.yml):
+
+As configurações abaixo visam estabelecer um ambiente resiliente e monitorado para o Serviço CRM. A definição da porta 8080 indica o número da porta do servidor. 
+
+As configurações do Spring Boot Actuator (management e endpoints) habilitam recursos de monitoramento, expondo informações detalhadas sobre a saúde do sistema e ativam o Circuit Breaker para lidar com falhas no Serviço CRM. As propriedades específicas do Resilience4j (resilience4j) configuram o Circuit Breaker para o "crm". 
+
+O registerHealthIndicator: true integra o estado do Circuit Breaker ao indicador de saúde, proporcionando uma visão clara da resiliência. Além disso, as configurações de tempo (waitDurationInOpenState: 5s) e quantidade de chamadas (minimumNumberOfCalls: 2, permittedNumberOfCallsInHalfOpenState: 3) ajustam o comportamento do Circuit Breaker, especificando o tempo de espera antes da transição para o estado meio aberto, o número mínimo de chamadas antes de considerar a abertura, e o número permitido de chamadas no estado meio aberto. 
+
+```hcl
+server:
+  port: 8080
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      crm:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+```
+
+Ao executar o Serviço CRM realizando uma requisição com sucesso so Serviço de Clientes, o resultado esperado é a montagem de uma notificação personalizada aos clientes João e Maria, utilizando os dados recuperados.
+
+![imagem](imagens/crmservice.png)
 
 ## Conclusão
 

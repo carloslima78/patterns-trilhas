@@ -14,17 +14,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/crm")
 public class CrmController {
 
-
     @GetMapping
     @CircuitBreaker(name = "crm", fallbackMethod = "ciruitBreakerFallback")
     public String crm(){
 
         RestTemplate restTemplate = new RestTemplate();
 
-        // Faz a requisição ao serviço cliente para obter a lista de clientes
         List<Map<String, Object>> clients = restTemplate.getForObject("http://localhost:8081/client", List.class);
 
-        // Adiciona uma mensagem específica do serviço CRM a cada cliente e concatena as mensagens
         String crmMessage = clients.stream()
                 .map(client -> "Proposta enviada ao cliente " + client.get("nome") + " no email " + client.get("email"))
                 .collect(Collectors.joining("\n"));
