@@ -75,7 +75,7 @@ No ecossistema .NET, a biblioteca Polly oferece suporte robusto para implementa�
 Em Go, a biblioteca "github.com/sony/gobreaker" proporciona uma implementação eficaz do Circuit Breaker. A simplicidade e a concisão do Go se refletem nessa biblioteca, permitindo aos desenvolvedores alcançar resiliência em seus serviços de maneira direta.
 
 **AWS**:
-Na nuvem da AWS, o Amazon API Gateway e AWS Circuit Breaker Patterns são ferramentas valiosas. Ao utilizar recursos nativos da AWS, como API Gateway, AWS Lambda, DynamoDB, Step Functions, etc, é possível implementar estratégias de Circuit Breaker em arquiteturas serverless, garantindo a estabilidade e a resiliência dos serviços.
+Na nuvem da AWS, o Circuit Breaker Patterns é ferramenta valiosa. Ao utilizar recursos nativos da AWS, como API Gateway, AWS Lambda, DynamoDB, Step Functions, etc, é possível implementar estratégias de Circuit Breaker em arquiteturas serverless, garantindo a estabilidade e a resiliência dos serviços.
 
 Esses exemplos ilustram como o conceito de Circuit Breaker transcende fronteiras tecnológicas, oferecendo soluções consistentes e eficazes em diferentes ambientes de desenvolvimento e infraestrutura.
 
