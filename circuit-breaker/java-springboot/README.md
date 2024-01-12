@@ -62,6 +62,22 @@ Além disso, ao integrar o Spring Boot Actuator, pode-se aproveitar os seus recu
 
 O Resilience4j, combinado com o Spring Boot Actuator, oferece uma solução abrangente para aprimorar a confiabilidade e a estabilidade do seu sistema Java.
 
+Documentação oficial da implementação do Circuit Breaker pelo Resilience4J (https://resilience4j.readme.io/docs/circuitbreaker).
+
+### Circuit Breaker Além do Java e Resilience4j
+
+Embora estejamos exemplificando o padrão Circuit Breaker com Java Spring Boot e a biblioteca Resilience4j, ele é um conceito adotado por outras linguagens e plataformas, demonstrando sua versatilidade e aplicabilidade em diferentes ecossistemas.
+
+**.NET (C#)**:
+No ecossistema .NET, a biblioteca Polly oferece suporte robusto para implementação de Circuit Breaker. Com recursos flexíveis, os desenvolvedores podem fortalecer a resiliência de suas aplicações em ambientes .NET, garantindo uma gestão eficiente de falhas.
+
+**Go (Golang)**:
+Em Go, a biblioteca "github.com/sony/gobreaker" proporciona uma implementação eficaz do Circuit Breaker. A simplicidade e a concisão do Go se refletem nessa biblioteca, permitindo aos desenvolvedores alcançar resiliência em seus serviços de maneira direta.
+
+**AWS**:
+Na nuvem da AWS, o Amazon API Gateway e AWS Circuit Breaker Patterns são ferramentas valiosas. Ao utilizar recursos nativos da AWS, como API Gateway, AWS Lambda, DynamoDB, Step Functions, etc, é possível implementar estratégias de Circuit Breaker em arquiteturas serverless, garantindo a estabilidade e a resiliência dos serviços.
+
+Esses exemplos ilustram como o conceito de Circuit Breaker transcende fronteiras tecnológicas, oferecendo soluções consistentes e eficazes em diferentes ambientes de desenvolvimento e infraestrutura.
 
 ## Serviço de Clientes
 
